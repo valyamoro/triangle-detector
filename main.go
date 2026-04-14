@@ -41,9 +41,6 @@ func main() {
 	}
 
 	outputFile := "chart.html"
-	if !result.Found {
-		outputFile = "chart_no_pattern.html"
-	}
 	fmt.Printf("\nChart saved: %s\n", outputFile)
 	fmt.Println("Open the file in your browser to view.")
 }

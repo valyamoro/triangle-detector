@@ -45,7 +45,6 @@ candles.json
 
 # Generated output files
 chart.html
-chart_no_pattern.html
 
 # Build artifacts
 triangle-detector
