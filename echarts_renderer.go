@@ -181,7 +181,7 @@ func (r *EChartsRenderer) buildKlineChart() *charts.Kline {
 		})
 	}
 
-	kline.AddSeries("Candles", klineData)
+	kline.SetXAxis(r.timestamps).AddSeries("Candles", klineData)
 
 	return kline
 }
