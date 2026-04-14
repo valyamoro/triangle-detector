@@ -43,6 +43,9 @@ Thumbs.db
 # Temporary data folder (candles and generated charts)
 tmp/
 
+# Config data
+.env
+
 # Build artifacts
 triangle-detector
 triangle-detector.exe

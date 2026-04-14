@@ -16,8 +16,9 @@ func main() {
 	force := flag.Bool("force", false, "Overwrite candles.json when fetching from Binance")
 	flag.Parse()
 
-	// Ensure temporary data directory exists
-	dataDir := "tmp"
+	_ = loadEnvFile(".env")
+
+	dataDir := os.Getenv("DATA_DIR")
 	if err := os.MkdirAll(dataDir, 0o755); err != nil {
 		log.Fatalf("failed to create data dir: %v", err)
 	}
@@ -28,7 +29,13 @@ func main() {
 		StartTime: *startDate,
 		EndTime:   *endDate,
 		Overwrite: *force,
-	}, filepath.Join(dataDir, "candles.json"))
+	}, filepath.Join(dataDir, func() string {
+		f := os.Getenv("CANDLES_FILE")
+		if f == "" {
+			return "candles.json"
+		}
+		return f
+	}()))
 	if err != nil {
 		log.Fatalf("Failed to load candles: %v", err)
 	}
@@ -44,7 +51,8 @@ func main() {
 
 	renderer := NewEChartsRenderer()
 
-	outputFile := filepath.Join(dataDir, "chart.html")
+	chartName := os.Getenv("CHART_FILE")
+	outputFile := filepath.Join(dataDir, chartName)
 	if err := RenderTriangleDetection(candles, result, renderer, outputFile); err != nil {
 		log.Fatalf("Rendering error: %v", err)
 	}
