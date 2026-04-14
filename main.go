@@ -1,35 +1,33 @@
 package main
 
 import (
-	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
-	"os"
 )
 
 func main() {
-	jsonPath := "candles.json"
-	if len(os.Args) > 1 {
-		jsonPath = os.Args[1]
-	}
+	symbol := flag.String("symbol", "", "Trading pair symbol, e.g. BTCUSDT")
+	interval := flag.String("interval", "", "Candle interval, e.g. 15m")
+	startDate := flag.String("start", "", "Start time in RFC3339 or YYYY-MM-DD")
+	endDate := flag.String("end", "", "End time in RFC3339 or YYYY-MM-DD")
+	flag.Parse()
 
-	data, err := os.ReadFile(jsonPath)
+	candles, err := LoadCandles(CandleRequestParams{
+		Symbol:    *symbol,
+		Interval:  *interval,
+		StartTime: *startDate,
+		EndTime:   *endDate,
+	}, "candles.json")
 	if err != nil {
-		log.Fatalf("Error reading file %s: %v", jsonPath, err)
-	}
-
-	var candles []Candle
-	if err := json.Unmarshal(data, &candles); err != nil {
-		log.Fatalf("Error parsing JSON: %v\n"+
-			"Expected format: [{\"open\":100,\"high\":105,\"low\":95,\"close\":102,"+
-			"\"volume\":1000,\"timestamp\":\"2024-01-01T10:00:00Z\"}, ...]", err)
+		log.Fatalf("Failed to load candles: %v", err)
 	}
 
 	fmt.Printf("Loaded %d candles\n", len(candles))
 
 	if len(candles) > 50 {
 		candles = candles[len(candles)-50:]
-		fmt.Printf("Working with the last 50 candles.\n")
+		fmt.Println("Working with the last 50 candles.")
 	}
 
 	result := DetectAscendingTriangle(candles, 15)
