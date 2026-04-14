@@ -11,6 +11,7 @@ func main() {
 	interval := flag.String("interval", "", "Candle interval, e.g. 15m")
 	startDate := flag.String("start", "", "Start time in RFC3339 or YYYY-MM-DD")
 	endDate := flag.String("end", "", "End time in RFC3339 or YYYY-MM-DD")
+	force := flag.Bool("force", false, "Overwrite candles.json when fetching from Binance")
 	flag.Parse()
 
 	candles, err := LoadCandles(CandleRequestParams{
@@ -18,6 +19,7 @@ func main() {
 		Interval:  *interval,
 		StartTime: *startDate,
 		EndTime:   *endDate,
+		Overwrite: *force,
 	}, "candles.json")
 	if err != nil {
 		log.Fatalf("Failed to load candles: %v", err)

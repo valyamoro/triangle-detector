@@ -18,7 +18,7 @@ Usage
   - By default the loader will NOT overwrite an existing non-empty `candles.json`.
   - To force overwrite when fetching, pass `-force`.
 
-Contact
+### Contact
 
 - Telegram: @gof4rvr
 - Email: r3ndyhell@gmail.com

@@ -15,6 +15,7 @@ type CandleRequestParams struct {
 	Interval  string
 	StartTime string
 	EndTime   string
+	Overwrite bool
 }
 
 func LoadCandles(params CandleRequestParams, filePath string) ([]Candle, error) {
@@ -46,8 +47,13 @@ func LoadCandles(params CandleRequestParams, filePath string) ([]Candle, error) 
 			return nil, err
 		}
 
-		if err := saveJSONFile[Candle](filePath, candles); err != nil {
-			return nil, err
+		// Save fetched candles only if the file was empty or user requested overwrite.
+		if isEmptyCandles || params.Overwrite {
+			if err := saveJSONFile[Candle](filePath, candles); err != nil {
+				return nil, err
+			}
+		} else {
+			fmt.Printf("note: fetched %d candles but %s already contains data; not overwriting\n", len(candles), filePath)
 		}
 
 		return candles, nil
@@ -57,10 +63,10 @@ func LoadCandles(params CandleRequestParams, filePath string) ([]Candle, error) 
 }
 
 func fetchBinanceCandles(
-	symbol, 
-	interval, 
-	startStr, 
-	endStr string, 
+	symbol,
+	interval,
+	startStr,
+	endStr string,
 	limit int,
 ) ([]Candle, error) {
 	if symbol == "" {
