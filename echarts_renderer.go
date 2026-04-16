@@ -130,7 +130,7 @@ func (r *EChartsRenderer) buildKlineChart() *charts.Kline {
 			Height: "700px",
 		}),
 		charts.WithTitleOpts(opts.Title{
-			Title:    "Ascending Triangle Detector",
+			Title:    "Horizontal Resistance Detector",
 			Subtitle: fmt.Sprintf("Analysis of %d candles", len(r.candles)),
 		}),
 		charts.WithTooltipOpts(opts.Tooltip{
@@ -165,6 +165,7 @@ func (r *EChartsRenderer) buildKlineChart() *charts.Kline {
 		}
 	}
 
+	// Собираем markPoints для breakout-оверлеев
 	var markPoints []opts.MarkPointNameCoordItem
 	for _, ov := range r.overlays {
 		if ov.kind != kindBreakout {
@@ -174,14 +175,23 @@ func (r *EChartsRenderer) buildKlineChart() *charts.Kline {
 			continue
 		}
 		markPoints = append(markPoints, opts.MarkPointNameCoordItem{
-			Name:       "Breakout",
+			Name:       ov.label,
 			Coordinate: []interface{}{r.timestamps[ov.fromIdx], r.candles[ov.fromIdx].High},
 			Symbol:     "arrow",
-			SymbolSize: 25,
+			SymbolSize: 20,
 		})
 	}
 
-	kline.SetXAxis(r.timestamps).AddSeries("Candles", klineData)
+	kline.SetXAxis(r.timestamps)
+
+	// ФИКС: применяем markPoints к серии
+	if len(markPoints) > 0 {
+		kline.AddSeries("Candles", klineData,
+			charts.WithMarkPointNameCoordItemOpts(markPoints...),
+		)
+	} else {
+		kline.AddSeries("Candles", klineData)
+	}
 
 	return kline
 }
