@@ -112,8 +112,6 @@ func visualizeHorizontalResistance(
 	r := NewEChartsRenderer()
 	r.RenderCandles(candles)
 
-	// 1. Отмечаем каждый свинг-хай стрелкой.
-	//    Label содержит цену, чтобы на графике было понятно.
 	for _, h := range highs {
 		r.overlays = append(r.overlays, overlay{
 			kind:    kindBreakout,
@@ -123,14 +121,11 @@ func visualizeHorizontalResistance(
 		})
 	}
 
-	// 2. Рисуем горизонтальные линии для каждой группы.
 	for _, g := range groups {
 		if len(g.touches) == 0 {
 			continue
 		}
 
-		// Границы линии — от самого раннего до самого позднего touch,
-		// потом продлеваем до конца свечей, чтобы линия была видна справа.
 		fromIdx := g.touches[0].Index
 		toIdx := g.touches[0].Index
 		for _, p := range g.touches {
@@ -141,17 +136,13 @@ func visualizeHorizontalResistance(
 				toIdx = p.Index
 			}
 		}
-		// Продлеваем до конца чарта для наглядности
 		toIdx = len(candles) - 1
 
 		label := fmt.Sprintf("Resistance %.2f (%d touches)", g.level, len(g.touches))
 
 		if g.level == bestLevel {
-			// Лучший уровень — синяя пунктирная Target-линия на весь диапазон.
-			// DrawTargetLine уже рисует от 0 до len(candles)-1.
 			r.DrawTargetLine(g.level)
 		} else {
-			// Остальные уровни — красные горизонтали.
 			r.DrawHorizontalLine(g.level, fromIdx, toIdx, label)
 		}
 	}
