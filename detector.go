@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 )
 
@@ -89,7 +88,6 @@ func findHorizontalResistance(candles []Candle, highs []SwingPoint) (level float
 		matched := false
 		for lvl := range levelGroups {
 			if math.Abs(h.Value-lvl)/lvl <= tolerance {
-				fmt.Println(lvl)
 				levelGroups[lvl] = append(levelGroups[lvl], h)
 				matched = true
 				break
