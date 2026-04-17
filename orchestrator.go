@@ -30,22 +30,9 @@ func RenderTriangleDetection(
 		"Support",
 	)
 
-	if result.BreakoutConfirmed && result.BreakoutIndex >= 0 {
-		renderer.MarkBreakout(result.BreakoutIndex)
-	}
-
-	renderer.DrawTargetLine(result.TargetPrice)
-
 	fmt.Println("Pattern found!")
 	fmt.Printf("  Resistance : %.2f\n", result.ResistanceLevel)
 	fmt.Printf("  Support slope : %.4f\n", result.SupportSlope)
-	fmt.Printf("  Target : %.2f\n", result.TargetPrice)
-	fmt.Printf("  Score : %.2f / 1.00\n", result.Score)
-	if result.BreakoutConfirmed {
-		fmt.Printf("  Breakout : candle #%d ✓\n", result.BreakoutIndex)
-	} else {
-		fmt.Println("  Breakout : pending")
-	}
 
 	return renderer.Export(outputPath)
 }

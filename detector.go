@@ -11,14 +11,10 @@ type SwingPoint struct {
 }
 
 type AscendingTriangleResult struct {
-	Found             bool
-	ResistanceLevel   float64
-	SupportSlope      float64
-	SupportIntercept  float64
-	BreakoutConfirmed bool
-	BreakoutIndex     int
-	TargetPrice       float64
-	Score             float64
+	Found            bool
+	ResistanceLevel  float64
+	SupportSlope     float64
+	SupportIntercept float64
 }
 
 type levelGroupEntry struct {
@@ -44,26 +40,11 @@ func DetectAscendingTriangle(candles []Candle) AscendingTriangleResult {
 		return AscendingTriangleResult{}
 	}
 
-	if !validateCorrectionMinima(swingHighs, swingLows, resistanceLevel) {
-		return AscendingTriangleResult{}
-	}
-
-	breakoutConfirmed, breakoutIndex := checkBreakout(candles, resistanceLevel)
-
-	height := calculateTriangleHeight(swingHighs, swingLows)
-	targetPrice := resistanceLevel + height
-
-	score := calculateScore(resistanceTouches, supportTouches, breakoutConfirmed, height)
-
 	return AscendingTriangleResult{
-		Found:             true,
-		ResistanceLevel:   resistanceLevel,
-		SupportSlope:      supportSlope,
-		SupportIntercept:  supportIntercept,
-		BreakoutConfirmed: breakoutConfirmed,
-		BreakoutIndex:     breakoutIndex,
-		TargetPrice:       targetPrice,
-		Score:             score,
+		Found:            true,
+		ResistanceLevel:  resistanceLevel,
+		SupportSlope:     supportSlope,
+		SupportIntercept: supportIntercept,
 	}
 }
 
@@ -101,61 +82,6 @@ func findSwingLows(candles []Candle, minDistance int) []SwingPoint {
 	return lows
 }
 
-func visualizeHorizontalResistance(
-	candles []Candle,
-	highs []SwingPoint,
-	groups []levelGroupEntry,
-	bestLevel float64,
-	maxTouches int,
-	filename string,
-) error {
-	r := NewEChartsRenderer()
-	r.RenderCandles(candles)
-
-	for _, h := range highs {
-		r.overlays = append(r.overlays, overlay{
-			kind:    kindBreakout,
-			fromIdx: h.Index,
-			label:   fmt.Sprintf("H %.2f", h.Value),
-			color:   "#ffdd00",
-		})
-	}
-
-	for _, g := range groups {
-		if len(g.touches) == 0 {
-			continue
-		}
-
-		fromIdx := g.touches[0].Index
-		toIdx := g.touches[0].Index
-		for _, p := range g.touches {
-			if p.Index < fromIdx {
-				fromIdx = p.Index
-			}
-			if p.Index > toIdx {
-				toIdx = p.Index
-			}
-		}
-		toIdx = len(candles) - 1
-
-		label := fmt.Sprintf("Resistance %.2f (%d touches)", g.level, len(g.touches))
-
-		if g.level == bestLevel {
-			r.DrawTargetLine(g.level)
-		} else {
-			r.DrawHorizontalLine(g.level, fromIdx, toIdx, label)
-		}
-	}
-
-	if err := r.Export(filename); err != nil {
-		return fmt.Errorf("visualizeHorizontalResistance: export failed: %w", err)
-	}
-
-	fmt.Printf("[chart] Saved to %s  (best level=%.4f, touches=%d)\n",
-		filename, bestLevel, maxTouches)
-	return nil
-}
-
 func findHorizontalResistance(candles []Candle, highs []SwingPoint) (level float64, touches int) {
 	if len(highs) < 2 {
 		return 0, 0
@@ -168,6 +94,7 @@ func findHorizontalResistance(candles []Candle, highs []SwingPoint) (level float
 		matched := false
 		for lvl := range levelGroups {
 			if math.Abs(h.Value-lvl)/lvl <= tolerance {
+				fmt.Println(lvl)
 				levelGroups[lvl] = append(levelGroups[lvl], h)
 				matched = true
 				break
@@ -198,17 +125,6 @@ func findHorizontalResistance(candles []Candle, highs []SwingPoint) (level float
 			maxTouches = 0
 			groups = nil
 		}
-	}
-
-	if err := visualizeHorizontalResistance(
-		candles,
-		highs,
-		groups,
-		bestLevel,
-		maxTouches,
-		"tmp/resistance.html",
-	); err != nil {
-		fmt.Printf("[warn] could not render chart: %v\n", err)
 	}
 
 	return bestLevel, maxTouches
@@ -254,95 +170,4 @@ func findAscendingSupport(lows []SwingPoint) (slope, intercept float64, touches 
 		return slope, intercept, len(lows)
 	}
 	return 0, 0, 0
-}
-
-func validateCorrectionMinima(highs []SwingPoint, lows []SwingPoint, resistance float64) bool {
-	const tolerance = 0.025
-
-	var resistanceIndices []int
-	for _, h := range highs {
-		if math.Abs(h.Value-resistance)/resistance <= tolerance {
-			resistanceIndices = append(resistanceIndices, h.Index)
-		}
-	}
-
-	if len(resistanceIndices) < 2 {
-		return false
-	}
-
-	for i := 0; i < len(resistanceIndices)-1; i++ {
-		start := resistanceIndices[i]
-		end := resistanceIndices[i+1]
-
-		minBetween := math.MaxFloat64
-		for _, low := range lows {
-			if low.Index > start && low.Index < end && low.Value < minBetween {
-				minBetween = low.Value
-			}
-		}
-
-		minBefore := math.MaxFloat64
-		for _, low := range lows {
-			if low.Index < start && low.Value < minBefore {
-				minBefore = low.Value
-			}
-		}
-
-		if minBetween == math.MaxFloat64 || minBefore == math.MaxFloat64 {
-			continue
-		}
-
-		if minBetween <= minBefore {
-			return false
-		}
-	}
-	return true
-}
-
-func checkBreakout(candles []Candle, resistance float64) (confirmed bool, index int) {
-	for i := len(candles) - 3; i < len(candles); i++ {
-		if i >= 0 && candles[i].Close > resistance {
-			return true, i
-		}
-	}
-	return false, -1
-}
-
-func calculateTriangleHeight(highs []SwingPoint, lows []SwingPoint) float64 {
-	if len(highs) == 0 || len(lows) == 0 {
-		return 0
-	}
-
-	maxHigh := highs[0].Value
-	for _, h := range highs {
-		if h.Value > maxHigh {
-			maxHigh = h.Value
-		}
-	}
-
-	minLow := lows[0].Value
-	for _, l := range lows {
-		if l.Value < minLow {
-			minLow = l.Value
-		}
-	}
-
-	return maxHigh - minLow
-}
-
-func calculateScore(resTouches, supTouches int, breakout bool, height float64) float64 {
-	score := 0.0
-
-	score += float64(resTouches) * 0.2
-	score += float64(supTouches) * 0.2
-
-	if breakout {
-		score += 0.3
-	}
-
-	if height > 0 {
-		score += 0.3 * math.Min(height/100, 1)
-	}
-
-	return math.Min(score, 1.0)
 }
