@@ -61,9 +61,13 @@ func detectAscendingTriangle(candles []Candle, rejectStats map[string]*int) Asce
 
 	firstTouchIdx := resistanceTouchPoints[0].Index
 	highAboveThreshold := resistanceLevel * (1 + vol*0.5)
+	crashThreshold := resistanceLevel * (1 - math.Max(0.05, vol*8))
 	for i := 0; i < firstTouchIdx; i++ {
 		if candles[i].High > highAboveThreshold {
 			return reject("03_high_before_first_touch", rejectStats)
+		}
+		if candles[i].Low < crashThreshold {
+			return reject("04_crash_before_first_touch", rejectStats)
 		}
 	}
 
@@ -76,8 +80,9 @@ func detectAscendingTriangle(candles []Candle, rejectStats map[string]*int) Asce
 		return reject("06_few_valleys", rejectStats)
 	}
 
+	allowedFlat := vol * 1.5
 	for i := 1; i < len(valleys); i++ {
-		if valleys[i].Value <= valleys[i-1].Value {
+		if valleys[i].Value < valleys[i-1].Value*(1-allowedFlat) {
 			return reject("07_valley_not_rising", rejectStats)
 		}
 	}
