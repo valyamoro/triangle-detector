@@ -80,6 +80,20 @@ func detectAscendingTriangle(candles []Candle, rejectStats map[string]*int) Asce
 		return reject("06_few_valleys", rejectStats)
 	}
 
+	firstVIdx := valleys[0].Index
+	maxCrashRange := 0.0
+	for k := firstVIdx - 2; k <= firstVIdx; k++ {
+		if k >= 0 {
+			r := (candles[k].High - candles[k].Low) / avgPrice
+			if r > maxCrashRange {
+				maxCrashRange = r
+			}
+		}
+	}
+	if maxCrashRange > math.Max(0.015, vol*4) {
+		return reject("20_first_valley_crash", rejectStats)
+	}
+
 	allowedFlat := vol * 1.5
 	for i := 1; i < len(valleys); i++ {
 		if valleys[i].Value < valleys[i-1].Value*(1-allowedFlat) {
