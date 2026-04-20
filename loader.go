@@ -24,6 +24,11 @@ func LoadCandles(params CandleRequestParams, filePath string) ([]Candle, error) 
 		return nil, err
 	}
 
+	// Если символ задан, но интервал не указан — дефолт 15m.
+	if params.Symbol != "" && params.Interval == "" {
+		params.Interval = "15m"
+	}
+
 	wantFetch := false
 	if params.Symbol != "" && params.Interval != "" {
 		wantFetch = true
