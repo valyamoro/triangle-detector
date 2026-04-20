@@ -23,13 +23,11 @@ func main() {
 		log.Fatalf("failed to create data dir: %v", err)
 	}
 
-	// Create chart directory under tmp and clean old charts
 	chartDir := filepath.Join("tmp", "chart")
 	if err := os.MkdirAll(chartDir, 0o755); err != nil {
 		log.Fatalf("failed to create chart dir: %v", err)
 	}
 
-	// Remove old chart files
 	entries, err := os.ReadDir(chartDir)
 	if err == nil {
 		for _, entry := range entries {
@@ -42,7 +40,6 @@ func main() {
 		}
 	}
 
-	// Default date range: 2026-01-01 to 2026-04-18
 	if *startDate == "" {
 		*startDate = "2026-01-01"
 	}
@@ -71,15 +68,15 @@ func main() {
 		return
 	}
 
-	// Sliding window analysis: 50 candles per window, shift by 1
 	windowSize := 50
 	patterns := 0
+	rejectStats := make(map[string]*int)
 
 	fmt.Printf("Starting analysis: %d candles, window size %d, shift 1\n", len(candles), windowSize)
 
 	for i := 0; i <= len(candles)-windowSize; i++ {
 		window := candles[i : i+windowSize]
-		result := DetectAscendingTriangle(window)
+		result := detectAscendingTriangleDiag(window, rejectStats)
 
 		if result.Found {
 			patterns++
@@ -101,4 +98,9 @@ func main() {
 	}
 
 	fmt.Printf("\nAnalysis complete. Found %d ascending triangle pattern(s).\nCharts saved to: %s\n", patterns, chartDir)
+
+	fmt.Println("\n--- Reject reasons ---")
+	for reason, count := range rejectStats {
+		fmt.Printf("  %-35s %d\n", reason, *count)
+	}
 }
