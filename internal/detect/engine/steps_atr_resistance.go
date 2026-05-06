@@ -68,18 +68,6 @@ func stepCheckTimingAndHighs(ctx *pipeCtx) {
 		return
 	}
 
-	if firstTouchIdx >= 5 {
-		prePoints := make([]SwingPoint, 0, firstTouchIdx)
-		for i := range firstTouchIdx {
-			prePoints = append(prePoints, SwingPoint{Index: i, Value: ctx.candles[i].Close})
-		}
-		preSlope, _ := linearRegression(prePoints)
-		if preSlope <= 0 {
-			ctx.reject(spec.ReasonPrecedingTrendNotUp)
-			return
-		}
-	}
-
 	lastTouchIdx := ctx.resistanceTouchPoints[len(ctx.resistanceTouchPoints)-1].Index
 	if float64(lastTouchIdx) < float64(len(ctx.candles))*p.Horizontal.MinLastTouchRatio {
 		ctx.reject(spec.ReasonResistanceLastTouchEarly)

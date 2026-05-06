@@ -44,9 +44,6 @@ const (
 	ReasonTooFlat                  = spec.ReasonTooFlat
 	ReasonTooNarrow                = spec.ReasonTooNarrow
 	ReasonApexTooFar               = spec.ReasonApexTooFar
-	ReasonFirstValleyCrash         = spec.ReasonFirstValleyCrash
-	ReasonFirstValleyNotFloor      = spec.ReasonFirstValleyNotFloor
-	ReasonPrecedingTrendNotUp      = spec.ReasonPrecedingTrendNotUp
 	ReasonVolumeNotDeclining       = spec.ReasonVolumeNotDeclining
 	ReasonSupportSlopeTooFlat      = spec.ReasonSupportSlopeTooFlat
 	ReasonResistanceLastTouchEarly = spec.ReasonResistanceLastTouchEarly

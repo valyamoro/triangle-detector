@@ -51,7 +51,6 @@ func writeDebugTxt(txtPath string, result detect.Result) {
 	sb.WriteString(fmt.Sprintf("crashThreshold      = %.6f\n", d.Resistance.CrashThreshold))
 	sb.WriteString(fmt.Sprintf("valleysCount        = %d\n", d.Support.ValleysCount))
 	sb.WriteString(fmt.Sprintf("firstVIdx           = %d\n", d.Support.FirstVIdx))
-	sb.WriteString(fmt.Sprintf("maxCrashRange       = %.8f\n", d.Support.MaxCrashRange))
 	sb.WriteString(fmt.Sprintf("allowedFlat         = %.8f\n", d.Support.AllowedFlat))
 	sb.WriteString(fmt.Sprintf("supportSlope        = %.8f\n", d.Support.SupportSlope))
 	sb.WriteString(fmt.Sprintf("supportIntercept    = %.6f\n", d.Support.SupportIntercept))

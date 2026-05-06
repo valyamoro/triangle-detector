@@ -25,7 +25,6 @@ const (
 	ReasonFirstTouchTooLate      = detect.ReasonFirstTouchTooLate
 	ReasonFewValleys             = detect.ReasonFewValleys
 	ReasonValleyNotRising        = detect.ReasonValleyNotRising
-	ReasonNegativeSlope          = detect.ReasonNegativeSlope
 	ReasonValleyTooDeep          = detect.ReasonValleyTooDeep
 	ReasonLowRSquared            = detect.ReasonLowRSquared
 	ReasonValleyOffSupportLine   = detect.ReasonValleyOffSupportLine
@@ -37,9 +36,6 @@ const (
 	ReasonTooFlat                = detect.ReasonTooFlat
 	ReasonTooNarrow              = detect.ReasonTooNarrow
 	ReasonApexTooFar             = detect.ReasonApexTooFar
-	ReasonFirstValleyCrash       = detect.ReasonFirstValleyCrash
-	ReasonFirstValleyNotFloor    = detect.ReasonFirstValleyNotFloor
-	ReasonPrecedingTrendNotUp    = detect.ReasonPrecedingTrendNotUp
 	ReasonVolumeNotDeclining     = detect.ReasonVolumeNotDeclining
 )
 

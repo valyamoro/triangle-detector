@@ -28,13 +28,11 @@ type TimingParams struct {
 }
 
 type SupportFitParams struct {
-	MaxFirstValleyCrash float64
-	AllowedFlatVolMult  float64
-	FloorTolerance      float64
-	MinRSquared         float64
-	MaxValleyDepthMin   float64
-	ValleyDeviationMin  float64
-	MinSlopeVolMult     float64
+	AllowedFlatVolMult float64
+	MinRSquared        float64
+	MaxValleyDepthMin  float64
+	ValleyDeviationMin float64
+	MinSlopeVolMult    float64
 }
 
 type GeometryParams struct {
@@ -72,13 +70,11 @@ func DefaultParams() Params {
 			CrashVolMin:        0.05,
 		},
 		Support: SupportFitParams{
-			MaxFirstValleyCrash: 0.015,
-			AllowedFlatVolMult:  0.5,
-			FloorTolerance:      0.003,
-			MinRSquared:         0.85,
-			MaxValleyDepthMin:   0.015,
-			ValleyDeviationMin:  0.0015,
-			MinSlopeVolMult:     0.3,
+			AllowedFlatVolMult: 0.5,
+			MinRSquared:        0.85,
+			MaxValleyDepthMin:  0.015,
+			ValleyDeviationMin: 0.0015,
+			MinSlopeVolMult:    0.3,
 		},
 		Geometry: GeometryParams{
 			CeilingTolMin:            0.002,

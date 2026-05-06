@@ -87,9 +87,6 @@ type CheckTimingDebugSnapshot struct {
 	CrashThreshold     float64
 	FirstTouchMaxRatio float64
 	MaxFirstTouchIdx   float64
-	PrecedingBars      int
-	PreSlope           float64
-	PrecedingChecked   bool
 	BarChecks          []TimingBarCheckRow
 	LastTouchIdx       int
 	MinLastTouchIdx    int
@@ -110,14 +107,10 @@ type ValidateValleysDebugSnapshot struct {
 	AvgPrice        float64
 	ResistanceLevel float64
 	FirstVIdx       int
-	MaxCrashRange   float64
-	CrashLimit      float64
 	AllowedFlat     float64
-	FloorTolerance  float64
 	MaxValleyDepth  float64
 	Valleys         []SwingPoint
 	PairChecks      []ValleyPairCheckRow
-	FloorChecks     []ValleyFloorCheckRow
 	DepthChecks     []ValleyDepthCheckRow
 }
 
@@ -127,13 +120,6 @@ type ValleyPairCheckRow struct {
 	CurrVal    float64
 	MinAllowed float64
 	OK         bool
-}
-
-type ValleyFloorCheckRow struct {
-	I        int
-	CurrVal  float64
-	FloorMin float64
-	OK       bool
 }
 
 type ValleyDepthCheckRow struct {

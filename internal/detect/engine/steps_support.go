@@ -8,7 +8,6 @@ import (
 
 func stepValidateValleys(ctx *pipeCtx) {
 	p := ctx.p
-	candles := ctx.candles
 	valleys := ctx.valleys
 
 	snap := ValidateValleysDebugSnapshot{
@@ -18,27 +17,8 @@ func stepValidateValleys(ctx *pipeCtx) {
 	}
 
 	firstVIdx := valleys[0].Index
-	maxCrashRange := 0.0
-	for k := firstVIdx - 2; k <= firstVIdx; k++ {
-		if k >= 0 {
-			r := (candles[k].High - candles[k].Low) / ctx.avgPrice
-			if r > maxCrashRange {
-				maxCrashRange = r
-			}
-		}
-	}
 	snap.FirstVIdx = firstVIdx
-	snap.MaxCrashRange = maxCrashRange
-	crashLimit := max(p.Support.MaxFirstValleyCrash, ctx.vol*4)
-	snap.CrashLimit = crashLimit
 	ctx.dbg.Support.FirstVIdx = firstVIdx
-	ctx.dbg.Support.MaxCrashRange = maxCrashRange
-
-	if maxCrashRange > crashLimit {
-		ctx.dbg.Logs.ValidateValleys = formatValidateValleysDebug(snap)
-		ctx.reject(spec.ReasonFirstValleyCrash)
-		return
-	}
 
 	allowedFlat := ctx.vol * p.Support.AllowedFlatVolMult
 	snap.AllowedFlat = allowedFlat
@@ -52,20 +32,6 @@ func stepValidateValleys(ctx *pipeCtx) {
 		if valleys[i].Value < minAl {
 			ctx.dbg.Logs.ValidateValleys = formatValidateValleysDebug(snap)
 			ctx.reject(spec.ReasonValleyNotRising)
-			return
-		}
-	}
-
-	floorTolerance := max(p.Support.FloorTolerance, ctx.vol)
-	snap.FloorTolerance = floorTolerance
-	for i := 1; i < len(valleys); i++ {
-		floorMin := valleys[0].Value * (1 - floorTolerance)
-		snap.FloorChecks = append(snap.FloorChecks, ValleyFloorCheckRow{
-			I: i, CurrVal: valleys[i].Value, FloorMin: floorMin, OK: valleys[i].Value >= floorMin,
-		})
-		if valleys[i].Value < floorMin {
-			ctx.dbg.Logs.ValidateValleys = formatValidateValleysDebug(snap)
-			ctx.reject(spec.ReasonFirstValleyNotFloor)
 			return
 		}
 	}

@@ -40,7 +40,6 @@ type ResistanceDebug struct {
 type SupportDebug struct {
 	ValleysCount     int
 	FirstVIdx        int
-	MaxCrashRange    float64
 	AllowedFlat      float64
 	SupportSlope     float64
 	SupportIntercept float64

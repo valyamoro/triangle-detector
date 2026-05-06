@@ -22,11 +22,6 @@ func formatCheckTimingDebug(s CheckTimingDebugSnapshot) string {
 		}
 		fmt.Fprintf(&b, "\n")
 	}
-	if s.PrecedingChecked {
-		fmt.Fprintf(&b, "\npreceding trend closes [0..%d): regression slope=%s\n", s.PrecedingBars, atrFmt(s.PreSlope))
-	} else {
-		fmt.Fprintf(&b, "\npreceding trend: skipped (firstTouchIdx < 5)\n")
-	}
 	fmt.Fprintf(&b, "lastTouchIdx=%d minLastTouchIdx=%d ok=%v\n", s.LastTouchIdx, s.MinLastTouchIdx, s.LastTouchOK)
 	return b.String()
 }
@@ -60,15 +55,10 @@ func formatValidateValleysDebug(s ValidateValleysDebugSnapshot) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "validateValleys trace\n")
 	fmt.Fprintf(&b, "avgPrice=%s resistance=%s firstVIdx=%d\n", atrFmt(s.AvgPrice), atrFmt(s.ResistanceLevel), s.FirstVIdx)
-	fmt.Fprintf(&b, "maxCrashRange=%s crashLimit=%s\n", atrFmt(s.MaxCrashRange), atrFmt(s.CrashLimit))
-	fmt.Fprintf(&b, "allowedFlat=%s floorTolerance=%s maxValleyDepth=%s\n", atrFmt(s.AllowedFlat), atrFmt(s.FloorTolerance), atrFmt(s.MaxValleyDepth))
+	fmt.Fprintf(&b, "allowedFlat=%s maxValleyDepth=%s\n", atrFmt(s.AllowedFlat), atrFmt(s.MaxValleyDepth))
 	fmt.Fprintf(&b, "\npair rising checks:\n")
 	for _, r := range s.PairChecks {
 		fmt.Fprintf(&b, "i=%d prev=%s curr=%s minAllowed=%s ok=%v\n", r.I, atrFmt(r.PrevVal), atrFmt(r.CurrVal), atrFmt(r.MinAllowed), r.OK)
-	}
-	fmt.Fprintf(&b, "\nfloor vs first valley:\n")
-	for _, r := range s.FloorChecks {
-		fmt.Fprintf(&b, "i=%d curr=%s floorMin=%s ok=%v\n", r.I, atrFmt(r.CurrVal), atrFmt(r.FloorMin), r.OK)
 	}
 	fmt.Fprintf(&b, "\ndepth vs resistance:\n")
 	for _, r := range s.DepthChecks {
@@ -169,15 +159,6 @@ func collectCheckTimingDebug(ctx *pipeCtx) CheckTimingDebugSnapshot {
 		row.FailHigh = !row.HighOK
 		row.FailLow = !row.LowOK
 		s.BarChecks = append(s.BarChecks, row)
-	}
-	if firstTouchIdx >= 5 {
-		s.PrecedingChecked = true
-		s.PrecedingBars = firstTouchIdx
-		prePoints := make([]SwingPoint, 0, firstTouchIdx)
-		for i := range firstTouchIdx {
-			prePoints = append(prePoints, SwingPoint{Index: i, Value: ctx.candles[i].Close})
-		}
-		s.PreSlope, _ = linearRegression(prePoints)
 	}
 	s.LastTouchIdx = ctx.resistanceTouchPoints[len(ctx.resistanceTouchPoints)-1].Index
 	s.MinLastTouchIdx = int(float64(n) * p.Horizontal.MinLastTouchRatio)
