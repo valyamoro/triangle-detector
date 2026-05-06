@@ -1,32 +1,35 @@
-
-
 # Triangle Detector
 
-Detects ascending triangle chart patterns in crypto candlestick data from Binance.
+CLI tool that loads Binance spot candlesticks, scans sliding windows for **ascending triangle** patterns (horizontal resistance + rising support), and saves **charts** (HTML -> PNG via headless Chrome), **summary stats**, and **per-step debug text** traces under `tmp/`.
+
+![Example chart output: BTCUSDT with resistance, support, and touch markers](assets/image.png)
+
+**Batch mode** walks historical ranges per symbol (from `.env` or `-symbol`). **Realtime mode** (`-realtime`) polls all USDT pairs on each candle close, with optional screenshots and deduplicated alerts.
 
 ## Structure
 
 ```
-cmd/triangled/      — main binary (batch scan + realtime monitor)
+cmd/triangled/          — CLI entry (batch + realtime)
 internal/
-  domain/           — shared types (Candle)
-  detect/           — ascending triangle detection pipeline
-  render/           — ChartRenderer interface
-  render/echarts/   — go-echarts chart renderer
-  app/              — render orchestration facade
-  artifact/         — output file path management
-  screenshot/       — chromedp HTML→PNG conversion
-  marketdata/binance/ — Binance REST API client
-  config/           — .env loading, AppConfig
+  domain/               — Candle
+  detect/               — public API facade (DetectAscendingTriangle, options, counters)
+  detect/spec/          — Params, RejectReason, RejectCounter
+  detect/engine/        — detection pipeline, steps, ATR, swings, resistance, logs
+  render/               — ChartRenderer interface
+  render/echarts/       — go-echarts implementation
+  app/                  — render orchestration
+  artifact/             — output paths (PNG, step txt 1–11)
+  screenshot/           — chromedp → PNG
+  marketdata/binance/   — REST klines
+  config/               — .env, AppConfig
+pkg/triangle/           — stable re-exports for library use
 ```
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for the full package dependency graph.
 
 ## Build
 
 ```sh
 go build ./cmd/triangled/
-# or via Makefile:
+# or:
 make build
 ```
 
@@ -39,12 +42,14 @@ DATA_DIR=tmp
 SYMBOLS=BTCUSDT,ETHUSDT,BNBUSDT
 ```
 
-**Batch scan** (one pass over all symbols):
+**Batch scan:**
+
 ```sh
 ./triangled
 ```
 
-**Realtime monitor** (continuous polling):
+**Realtime monitor:**
+
 ```sh
 ./triangled -realtime
 ```
@@ -53,12 +58,6 @@ SYMBOLS=BTCUSDT,ETHUSDT,BNBUSDT
 
 ```sh
 make test
-# or directly:
+# or:
 go test ./internal/...
 ```
-
-### Contact
-
-- Telegram: @gof4rvr
-- Email: r3ndyhell@gmail.com
-
