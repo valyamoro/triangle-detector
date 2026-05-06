@@ -1,4 +1,4 @@
-package detect
+﻿package engine
 
 type CalcATRBarTrace struct {
 	Index                 int
@@ -202,3 +202,4 @@ type CheckVolumeDebugSnapshot struct {
 	SlopeMax       float64
 	Points         []SwingPoint
 }
+

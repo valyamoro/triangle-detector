@@ -1,15 +1,17 @@
 package detect
 
+import "github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
+
 type Option func(*opts)
 
 type opts struct {
-	params  Params
-	counter RejectCounter
+	params  spec.Params
+	counter spec.RejectCounter
 }
 
 func newOpts(options []Option) opts {
 	o := opts{
-		params:  DefaultParams(),
+		params:  spec.DefaultParams(),
 		counter: NoopCounter{},
 	}
 	for _, opt := range options {

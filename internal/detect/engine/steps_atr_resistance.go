@@ -1,4 +1,6 @@
-package detect
+﻿package engine
+
+import "github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
 
 func stepCalcATR(ctx *pipeCtx) {
 	sum := 0.0
@@ -21,7 +23,7 @@ func stepFindSwingHighs(ctx *pipeCtx) {
 	ctx.dbg.Logs.FindSwingHighs = formatFindSwingHighsDebug(snap)
 	ctx.dbg.Swing.SwingHighsCount = len(ctx.swingHighs)
 	if len(ctx.swingHighs) < 2 {
-		ctx.reject(ReasonFewSwingHighs)
+		ctx.reject(spec.ReasonFewSwingHighs)
 	}
 }
 
@@ -34,7 +36,7 @@ func stepFindResistance(ctx *pipeCtx) {
 	ctx.dbg.Resistance.ResistanceLevel = snap.Level
 	ctx.dbg.Resistance.ResistanceTouches = snap.Touches
 	if snap.Touches < 3 {
-		ctx.reject(ReasonResistanceLt3Touches)
+		ctx.reject(spec.ReasonResistanceLt3Touches)
 	}
 }
 
@@ -52,17 +54,17 @@ func stepCheckTimingAndHighs(ctx *pipeCtx) {
 
 	for i := 0; i < firstTouchIdx; i++ {
 		if ctx.candles[i].High > highAboveThreshold {
-			ctx.reject(ReasonHighBeforeFirstTouch)
+			ctx.reject(spec.ReasonHighBeforeFirstTouch)
 			return
 		}
 		if ctx.candles[i].Low < crashThreshold {
-			ctx.reject(ReasonCrashBeforeFirstTouch)
+			ctx.reject(spec.ReasonCrashBeforeFirstTouch)
 			return
 		}
 	}
 
 	if float64(firstTouchIdx) > float64(len(ctx.candles))*p.Timing.FirstTouchMaxRatio {
-		ctx.reject(ReasonFirstTouchTooLate)
+		ctx.reject(spec.ReasonFirstTouchTooLate)
 		return
 	}
 
@@ -73,7 +75,7 @@ func stepCheckTimingAndHighs(ctx *pipeCtx) {
 		}
 		preSlope, _ := linearRegression(prePoints)
 		if preSlope <= 0 {
-			ctx.reject(ReasonPrecedingTrendNotUp)
+			ctx.reject(spec.ReasonPrecedingTrendNotUp)
 		}
 	}
 }
@@ -84,6 +86,7 @@ func stepFindValleys(ctx *pipeCtx) {
 	ctx.dbg.Logs.FindValleys = formatFindValleysDebug(snap)
 	ctx.dbg.Support.ValleysCount = len(ctx.valleys)
 	if len(ctx.valleys) < 2 {
-		ctx.reject(ReasonFewValleys)
+		ctx.reject(spec.ReasonFewValleys)
 	}
 }
+

@@ -1,4 +1,4 @@
-package detect
+﻿package engine
 
 import (
 	"github.com/gopherchan2006/go-triangle-detector/internal/domain"
@@ -108,3 +108,4 @@ func linearRegression(points []SwingPoint) (slope, intercept float64) {
 	intercept = (sumY - slope*sumX) / n
 	return
 }
+

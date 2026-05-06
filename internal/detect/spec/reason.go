@@ -1,4 +1,4 @@
-package detect
+package spec
 
 type RejectReason string
 

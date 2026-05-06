@@ -1,4 +1,4 @@
-package detect
+﻿package engine
 
 import (
 	"math"
@@ -95,3 +95,4 @@ func TestCalcATR_Empty(t *testing.T) {
 		t.Errorf("expected ATR=0 for empty candles, got %f", atr)
 	}
 }
+

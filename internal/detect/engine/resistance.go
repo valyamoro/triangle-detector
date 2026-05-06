@@ -1,13 +1,15 @@
-package detect
+﻿package engine
 
 import (
 	"fmt"
 	"math"
 	"strings"
+
+	"github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
 	"github.com/gopherchan2006/go-triangle-detector/internal/domain"
 )
 
-func collectFindHorizontalResistanceDebug(candles []domain.Candle, highs []SwingPoint, vol float64, p Params) FindHorizontalResistanceDebugSnapshot {
+func collectFindHorizontalResistanceDebug(candles []domain.Candle, highs []SwingPoint, vol float64, p spec.Params) FindHorizontalResistanceDebugSnapshot {
 	snap := FindHorizontalResistanceDebugSnapshot{
 		Vol:     vol,
 		HighsIn: append([]SwingPoint(nil), highs...),
@@ -202,7 +204,8 @@ func formatFindHorizontalResistanceDebug(s FindHorizontalResistanceDebugSnapshot
 	return b.String()
 }
 
-func findHorizontalResistance(candles []domain.Candle, highs []SwingPoint, vol float64, p Params) (level float64, touches int, touchPoints []SwingPoint) {
+func findHorizontalResistance(candles []domain.Candle, highs []SwingPoint, vol float64, p spec.Params) (level float64, touches int, touchPoints []SwingPoint) {
 	s := collectFindHorizontalResistanceDebug(candles, highs, vol, p)
 	return s.Level, s.Touches, s.TouchPoints
 }
+

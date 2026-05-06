@@ -1,4 +1,6 @@
-package detect
+﻿package engine
+
+import "github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
 
 func geometrySnapshotFromCtx(ctx *pipeCtx, pEnd, ceilingEnd int, note string, cBreak, fBreak, sCross int) CheckGeometryDebugSnapshot {
 	p := ctx.p
@@ -55,7 +57,7 @@ func stepCheckGeometry(ctx *pipeCtx) {
 	ctx.dbg.Geometry.LastX = lastX
 	if xIntersect <= lastX {
 		ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, 0, patternEnd, "no convergence (apex not right of window)", -1, -1, -1))
-		ctx.reject(ReasonNoConvergence)
+		ctx.reject(spec.ReasonNoConvergence)
 		return
 	}
 
@@ -70,7 +72,7 @@ func stepCheckGeometry(ctx *pipeCtx) {
 	for i := patternStart; i <= ceilingEnd; i++ {
 		if candles[i].High > ceiling {
 			ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, 0, ceilingEnd, "breaks ceiling", i, -1, -1))
-			ctx.reject(ReasonBreaksCeiling)
+			ctx.reject(spec.ReasonBreaksCeiling)
 			return
 		}
 	}
@@ -81,7 +83,7 @@ func stepCheckGeometry(ctx *pipeCtx) {
 		supportVal := ctx.supportSlope*float64(i) + ctx.supportIntercept
 		if candles[i].Low < supportVal*(1-floorTol) {
 			ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, 0, ceilingEnd, "breaks support floor", -1, i, -1))
-			ctx.reject(ReasonBreaksSupportFloor)
+			ctx.reject(spec.ReasonBreaksSupportFloor)
 			return
 		}
 	}
@@ -89,7 +91,7 @@ func stepCheckGeometry(ctx *pipeCtx) {
 	for i := patternStart; i <= patternEnd; i++ {
 		if ctx.resistanceLevel <= ctx.supportSlope*float64(i)+ctx.supportIntercept {
 			ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, 0, ceilingEnd, "support above resistance", -1, -1, i))
-			ctx.reject(ReasonSupportAboveResistance)
+			ctx.reject(spec.ReasonSupportAboveResistance)
 			return
 		}
 	}
@@ -100,13 +102,13 @@ func stepCheckGeometry(ctx *pipeCtx) {
 	ctx.dbg.Geometry.HeightAtEnd = heightAtEnd
 	if heightAtEnd <= 0 || heightAtEnd >= heightAtStart*p.Geometry.MaxNarrowingRatio {
 		ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, 0, ceilingEnd, "not narrowing", -1, -1, -1))
-		ctx.reject(ReasonNotNarrowing)
+		ctx.reject(spec.ReasonNotNarrowing)
 		return
 	}
 
 	if heightAtStart < ctx.resistanceLevel*p.Geometry.MinPatternHeight {
 		ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, 0, ceilingEnd, "too flat", -1, -1, -1))
-		ctx.reject(ReasonTooFlat)
+		ctx.reject(spec.ReasonTooFlat)
 		return
 	}
 
@@ -121,7 +123,7 @@ func stepCheckGeometry(ctx *pipeCtx) {
 	ctx.dbg.Geometry.PEnd = pEnd
 	if pEnd-patternStart < p.Geometry.MinPatternWidth {
 		ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, pEnd, ceilingEnd, "too narrow", -1, -1, -1))
-		ctx.reject(ReasonTooNarrow)
+		ctx.reject(spec.ReasonTooNarrow)
 		return
 	}
 
@@ -129,7 +131,7 @@ func stepCheckGeometry(ctx *pipeCtx) {
 	ctx.dbg.Geometry.PatternWidth = patternWidth
 	if xIntersect > lastX+patternWidth*p.Geometry.MaxApexFactor {
 		ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, pEnd, ceilingEnd, "apex too far", -1, -1, -1))
-		ctx.reject(ReasonApexTooFar)
+		ctx.reject(spec.ReasonApexTooFar)
 		return
 	}
 
@@ -173,6 +175,7 @@ func stepCheckVolume(ctx *pipeCtx) {
 	snap.SlopeMax = p.VolumeDecl.VolDeclSlopeMax
 	ctx.dbg.Logs.CheckVolume = formatCheckVolumeDebug(snap)
 	if avgVol > 0 && norm > p.VolumeDecl.VolDeclSlopeMax {
-		ctx.reject(ReasonVolumeNotDeclining)
+		ctx.reject(spec.ReasonVolumeNotDeclining)
 	}
 }
+

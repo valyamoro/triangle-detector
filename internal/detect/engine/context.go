@@ -1,13 +1,14 @@
-package detect
+package engine
 
 import (
+	"github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
 	"github.com/gopherchan2006/go-triangle-detector/internal/domain"
 )
 
 type pipeCtx struct {
 	candles []domain.Candle
-	o       opts
-	p       Params
+	p       spec.Params
+	counter spec.RejectCounter
 	dbg     DebugInfo
 
 	avgPrice              float64
@@ -27,8 +28,8 @@ type pipeCtx struct {
 	rejected *Result
 }
 
-func (ctx *pipeCtx) reject(reason RejectReason) {
-	ctx.o.counter.Inc(reason)
+func (ctx *pipeCtx) reject(reason spec.RejectReason) {
+	ctx.counter.Inc(reason)
 	ctx.rejected = &Result{RejectReason: reason}
 }
 

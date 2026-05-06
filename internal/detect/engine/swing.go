@@ -1,4 +1,4 @@
-package detect
+﻿package engine
 
 import (
 	"fmt"
@@ -75,3 +75,4 @@ func formatFindSwingHighsDebug(s FindSwingHighsDebugSnapshot) string {
 func findSwingHighs(candles []domain.Candle, radius int) []SwingPoint {
 	return collectFindSwingHighsDebug(candles, radius).SwingHighs
 }
+

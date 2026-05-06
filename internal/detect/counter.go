@@ -2,10 +2,6 @@ package detect
 
 import "sync"
 
-type RejectCounter interface {
-	Inc(reason RejectReason)
-}
-
 type NoopCounter struct{}
 
 func (NoopCounter) Inc(RejectReason) {}

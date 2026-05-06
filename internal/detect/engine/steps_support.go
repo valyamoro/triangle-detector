@@ -1,6 +1,10 @@
-package detect
+﻿package engine
 
-import "math"
+import (
+	"math"
+
+	"github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
+)
 
 func stepValidateValleys(ctx *pipeCtx) {
 	p := ctx.p
@@ -32,7 +36,7 @@ func stepValidateValleys(ctx *pipeCtx) {
 
 	if maxCrashRange > crashLimit {
 		ctx.dbg.Logs.ValidateValleys = formatValidateValleysDebug(snap)
-		ctx.reject(ReasonFirstValleyCrash)
+		ctx.reject(spec.ReasonFirstValleyCrash)
 		return
 	}
 
@@ -47,7 +51,7 @@ func stepValidateValleys(ctx *pipeCtx) {
 		})
 		if valleys[i].Value < minAl {
 			ctx.dbg.Logs.ValidateValleys = formatValidateValleysDebug(snap)
-			ctx.reject(ReasonValleyNotRising)
+			ctx.reject(spec.ReasonValleyNotRising)
 			return
 		}
 	}
@@ -61,7 +65,7 @@ func stepValidateValleys(ctx *pipeCtx) {
 		})
 		if valleys[i].Value < floorMin {
 			ctx.dbg.Logs.ValidateValleys = formatValidateValleysDebug(snap)
-			ctx.reject(ReasonFirstValleyNotFloor)
+			ctx.reject(spec.ReasonFirstValleyNotFloor)
 			return
 		}
 	}
@@ -76,7 +80,7 @@ func stepValidateValleys(ctx *pipeCtx) {
 		})
 		if v.Value < minAl {
 			ctx.dbg.Logs.ValidateValleys = formatValidateValleysDebug(snap)
-			ctx.reject(ReasonValleyTooDeep)
+			ctx.reject(spec.ReasonValleyTooDeep)
 			return
 		}
 	}
@@ -98,7 +102,7 @@ func stepFitSupportLine(ctx *pipeCtx) {
 
 	if slope <= 0 {
 		ctx.dbg.Logs.FitSupportLine = formatFitSupportDebug(snap)
-		ctx.reject(ReasonNegativeSlope)
+		ctx.reject(spec.ReasonNegativeSlope)
 		return
 	}
 
@@ -109,7 +113,7 @@ func stepFitSupportLine(ctx *pipeCtx) {
 		snap.RSquaredChecked = true
 		if r2 < p.Support.MinRSquared {
 			ctx.dbg.Logs.FitSupportLine = formatFitSupportDebug(snap)
-			ctx.reject(ReasonLowRSquared)
+			ctx.reject(spec.ReasonLowRSquared)
 			return
 		}
 	}
@@ -130,9 +134,10 @@ func stepFitSupportLine(ctx *pipeCtx) {
 		})
 		if expected > 0 && relErr > valleyDeviation {
 			ctx.dbg.Logs.FitSupportLine = formatFitSupportDebug(snap)
-			ctx.reject(ReasonValleyOffSupportLine)
+			ctx.reject(spec.ReasonValleyOffSupportLine)
 			return
 		}
 	}
 	ctx.dbg.Logs.FitSupportLine = formatFitSupportDebug(snap)
 }
+

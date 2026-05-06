@@ -1,4 +1,4 @@
-package detect
+﻿package engine
 
 import (
 	"fmt"
@@ -135,3 +135,4 @@ func atrFmt(x float64) string {
 func calcATR(candles []domain.Candle) float64 {
 	return collectCalcATRDebug(candles).ATR
 }
+

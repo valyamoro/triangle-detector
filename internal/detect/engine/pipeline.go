@@ -1,6 +1,14 @@
-package detect
+package engine
 
-import "github.com/gopherchan2006/go-triangle-detector/internal/domain"
+import (
+	"github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
+	"github.com/gopherchan2006/go-triangle-detector/internal/domain"
+)
+
+type RunOpts struct {
+	Params  spec.Params
+	Counter spec.RejectCounter
+}
 
 type pipelineStep struct {
 	fn func(*pipeCtx)
@@ -18,13 +26,8 @@ var pipelineSteps = []pipelineStep{
 	{stepCheckVolume},
 }
 
-func DetectAscendingTriangle(candles []domain.Candle, options ...Option) Result {
-	o := newOpts(options)
-	return detectAscendingTriangle(candles, o)
-}
-
-func detectAscendingTriangle(candles []domain.Candle, o opts) Result {
-	ctx := &pipeCtx{candles: candles, o: o, p: o.params}
+func Detect(candles []domain.Candle, ro RunOpts) Result {
+	ctx := &pipeCtx{candles: candles, p: ro.Params, counter: ro.Counter}
 	for _, step := range pipelineSteps {
 		step.fn(ctx)
 		if ctx.rejected != nil {

@@ -1,4 +1,6 @@
-package detect
+﻿package engine
+
+import "github.com/gopherchan2006/go-triangle-detector/internal/detect/spec"
 
 type SwingPoint struct {
 	Index int
@@ -18,9 +20,9 @@ type StepDebugLogs struct {
 }
 
 type ATRDebug struct {
-	AvgPrice  float64
-	ATRValue  float64
-	Vol       float64
+	AvgPrice float64
+	ATRValue float64
+	Vol      float64
 }
 
 type SwingDebug struct {
@@ -73,7 +75,7 @@ type DebugInfo struct {
 
 type Result struct {
 	Found                 bool
-	RejectReason          RejectReason
+	RejectReason          spec.RejectReason
 	ResistanceLevel       float64
 	ResistanceTouches     int
 	ResistanceTouchPoints []SwingPoint
@@ -85,3 +87,4 @@ type Result struct {
 	BreakoutDetected      bool
 	BreakoutVolumeRatio   float64
 }
+
