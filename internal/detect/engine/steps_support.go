@@ -100,12 +100,6 @@ func stepFitSupportLine(ctx *pipeCtx) {
 	ctx.dbg.Support.SupportSlope = slope
 	ctx.dbg.Support.SupportIntercept = intercept
 
-	if slope <= 0 {
-		ctx.dbg.Logs.FitSupportLine = formatFitSupportDebug(snap)
-		ctx.reject(spec.ReasonNegativeSlope)
-		return
-	}
-
 	if len(valleys) >= 2 {
 		span := float64(valleys[len(valleys)-1].Index - valleys[0].Index)
 		if span > 0 {

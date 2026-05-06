@@ -33,7 +33,6 @@ const (
 	ReasonFirstTouchTooLate        = spec.ReasonFirstTouchTooLate
 	ReasonFewValleys               = spec.ReasonFewValleys
 	ReasonValleyNotRising          = spec.ReasonValleyNotRising
-	ReasonNegativeSlope            = spec.ReasonNegativeSlope
 	ReasonValleyTooDeep            = spec.ReasonValleyTooDeep
 	ReasonLowRSquared              = spec.ReasonLowRSquared
 	ReasonValleyOffSupportLine     = spec.ReasonValleyOffSupportLine

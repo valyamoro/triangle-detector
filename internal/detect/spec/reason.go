@@ -10,7 +10,6 @@ const (
 	ReasonFirstTouchTooLate        RejectReason = "05_first_touch_too_late"
 	ReasonFewValleys               RejectReason = "06_few_valleys"
 	ReasonValleyNotRising          RejectReason = "07_valley_not_rising"
-	ReasonNegativeSlope            RejectReason = "08_negative_slope"
 	ReasonValleyTooDeep            RejectReason = "09_valley_too_deep"
 	ReasonLowRSquared              RejectReason = "10_low_r_squared"
 	ReasonValleyOffSupportLine     RejectReason = "11_valley_off_support_line"
