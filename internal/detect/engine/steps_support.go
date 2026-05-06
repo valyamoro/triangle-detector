@@ -106,6 +106,22 @@ func stepFitSupportLine(ctx *pipeCtx) {
 		return
 	}
 
+	if len(valleys) >= 2 {
+		span := float64(valleys[len(valleys)-1].Index - valleys[0].Index)
+		if span > 0 {
+			relRise := slope * span / ctx.avgPrice
+			threshRise := ctx.vol * p.Support.MinSlopeVolMult
+			snap.SlopeRise = relRise
+			snap.SlopeRiseThreshold = threshRise
+			snap.SlopeRiseChecked = true
+			if relRise < threshRise {
+				ctx.dbg.Logs.FitSupportLine = formatFitSupportDebug(snap)
+				ctx.reject(spec.ReasonSupportSlopeTooFlat)
+				return
+			}
+		}
+	}
+
 	if len(valleys) >= 3 {
 		r2 := rSquared(valleys, slope, intercept)
 		snap.RSquared = r2

@@ -80,6 +80,9 @@ func formatFitSupportDebug(s FitSupportDebugSnapshot) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "fitSupportLine trace\n")
 	fmt.Fprintf(&b, "slope=%s intercept=%s\n", atrFmt(s.Slope), atrFmt(s.Intercept))
+	if s.SlopeRiseChecked {
+		fmt.Fprintf(&b, "slopeRise=%s threshold=%s ok=%v\n", atrFmt(s.SlopeRise), atrFmt(s.SlopeRiseThreshold), s.SlopeRise >= s.SlopeRiseThreshold)
+	}
 	fmt.Fprintf(&b, "minRSquared=%s rSquared=%s checked=%v\n", atrFmt(s.MinRSquared), atrFmt(s.RSquared), s.RSquaredChecked)
 	fmt.Fprintf(&b, "valleyDeviationMax=%s\n", atrFmt(s.ValleyDeviation))
 	for _, v := range s.Valleys {

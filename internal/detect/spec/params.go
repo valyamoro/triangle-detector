@@ -33,6 +33,7 @@ type SupportFitParams struct {
 	MinRSquared         float64
 	MaxValleyDepthMin   float64
 	ValleyDeviationMin  float64
+	MinSlopeVolMult     float64
 }
 
 type GeometryParams struct {
@@ -74,6 +75,7 @@ func DefaultParams() Params {
 			MinRSquared:         0.85,
 			MaxValleyDepthMin:   0.015,
 			ValleyDeviationMin:  0.0015,
+			MinSlopeVolMult:     0.3,
 		},
 		Geometry: GeometryParams{
 			CeilingTolMin:     0.002,

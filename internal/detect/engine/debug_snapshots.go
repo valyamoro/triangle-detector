@@ -141,14 +141,17 @@ type ValleyDepthCheckRow struct {
 }
 
 type FitSupportDebugSnapshot struct {
-	Valleys           []SwingPoint
-	Slope             float64
-	Intercept         float64
-	MinRSquared       float64
-	RSquared          float64
-	RSquaredChecked   bool
-	ValleyDeviation   float64
-	DeviationRows     []SupportDeviationRow
+	Valleys            []SwingPoint
+	Slope              float64
+	Intercept          float64
+	MinRSquared        float64
+	RSquared           float64
+	RSquaredChecked    bool
+	ValleyDeviation    float64
+	DeviationRows      []SupportDeviationRow
+	SlopeRise          float64
+	SlopeRiseThreshold float64
+	SlopeRiseChecked   bool
 }
 
 type SupportDeviationRow struct {

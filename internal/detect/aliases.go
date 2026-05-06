@@ -49,6 +49,7 @@ const (
 	ReasonFirstValleyNotFloor    = spec.ReasonFirstValleyNotFloor
 	ReasonPrecedingTrendNotUp    = spec.ReasonPrecedingTrendNotUp
 	ReasonVolumeNotDeclining     = spec.ReasonVolumeNotDeclining
+	ReasonSupportSlopeTooFlat    = spec.ReasonSupportSlopeTooFlat
 )
 
 func DefaultParams() Params {

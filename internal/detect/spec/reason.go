@@ -26,4 +26,5 @@ const (
 	ReasonFirstValleyNotFloor    RejectReason = "21_first_valley_not_floor"
 	ReasonPrecedingTrendNotUp    RejectReason = "22_preceding_trend_not_up"
 	ReasonVolumeNotDeclining     RejectReason = "23_volume_not_declining"
+	ReasonSupportSlopeTooFlat    RejectReason = "24_support_slope_too_flat"
 )
