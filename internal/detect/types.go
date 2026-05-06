@@ -5,25 +5,34 @@ type SwingPoint struct {
 	Value float64
 }
 
+type StepDebugLogs struct {
+	CalcATR                  string
+	FindSwingHighs           string
+	FindHorizontalResistance string
+	CheckTimingAndHighs      string
+	FindValleys              string
+	ValidateValleys          string
+	FitSupportLine           string
+	CheckGeometry            string
+	CheckVolume              string
+}
+
 type ATRDebug struct {
-	AvgPrice   float64
-	ATRValue   float64
-	Vol        float64
-	CalcATRLog string
+	AvgPrice  float64
+	ATRValue  float64
+	Vol       float64
 }
 
 type SwingDebug struct {
-	SwingHighsCount   int
-	FindSwingHighsLog string
+	SwingHighsCount int
 }
 
 type ResistanceDebug struct {
-	ResistanceLevel             float64
-	ResistanceTouches           int
-	FirstTouchIdx               int
-	HighAboveThreshold          float64
-	CrashThreshold              float64
-	FindHorizontalResistanceLog string
+	ResistanceLevel    float64
+	ResistanceTouches  int
+	FirstTouchIdx      int
+	HighAboveThreshold float64
+	CrashThreshold     float64
 }
 
 type SupportDebug struct {
@@ -54,6 +63,7 @@ type GeometryDebug struct {
 }
 
 type DebugInfo struct {
+	Logs       StepDebugLogs
 	ATR        ATRDebug
 	Swing      SwingDebug
 	Resistance ResistanceDebug
@@ -74,66 +84,4 @@ type Result struct {
 	TargetPrice           float64
 	BreakoutDetected      bool
 	BreakoutVolumeRatio   float64
-}
-
-type CalcATRBarTrace struct {
-	Index                 int
-	FirstBar              bool
-	O, H, L, C, PrevClose float64
-
-	HighLow  float64
-	D1, D2   float64
-	D1TookTR bool
-	D2TookTR bool
-	TR       float64
-	SumTR    float64
-}
-
-type CalcATRDebugSnapshot struct {
-	BarCount int
-	Bars     []CalcATRBarTrace
-	SumTR    float64
-	ATR      float64
-}
-
-type SwingHighScanRow struct {
-	Index       int
-	High        float64
-	IsSwingHigh bool
-	BlockIndex  int
-	BlockHigh   float64
-}
-
-type FindSwingHighsDebugSnapshot struct {
-	Radius     int
-	N          int
-	Rows       []SwingHighScanRow
-	SwingHighs []SwingPoint
-}
-
-type HorizontalResistanceGroupDebug struct {
-	Points      []SwingPoint
-	Sum         float64
-	AvgAll      float64
-	SpacedValid []SwingPoint
-}
-
-type FindHorizontalResistanceDebugSnapshot struct {
-	Vol             float64
-	Tolerance       float64
-	Breakout        float64
-	MinSpacing      int
-	HighsIn         []SwingPoint
-	Groups          []HorizontalResistanceGroupDebug
-	BestGroupIdx    int
-	BestLevel       float64
-	BestTouchPoints []SwingPoint
-	FailReason      string
-	FailPairIdx     int
-	FailBar         int
-	FailClose       float64
-	FailLimit       float64
-	Level           float64
-	Touches         int
-	TouchPoints     []SwingPoint
 }

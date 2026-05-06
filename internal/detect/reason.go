@@ -24,6 +24,6 @@ const (
 	ReasonApexTooFar             RejectReason = "19_apex_too_far"
 	ReasonFirstValleyCrash       RejectReason = "20_first_valley_crash"
 	ReasonFirstValleyNotFloor    RejectReason = "21_first_valley_not_floor"
-	ReasonPrecedingTrendNotUp    RejectReason = "24_preceding_trend_not_up"
-	ReasonVolumeNotDeclining     RejectReason = "25_volume_not_declining"
+	ReasonPrecedingTrendNotUp    RejectReason = "22_preceding_trend_not_up"
+	ReasonVolumeNotDeclining     RejectReason = "23_volume_not_declining"
 )

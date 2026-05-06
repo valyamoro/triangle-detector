@@ -4,14 +4,12 @@ type Option func(*opts)
 
 type opts struct {
 	params  Params
-	trace   bool
 	counter RejectCounter
 }
 
 func newOpts(options []Option) opts {
 	o := opts{
 		params:  DefaultParams(),
-		trace:   true,
 		counter: NoopCounter{},
 	}
 	for _, opt := range options {
@@ -20,8 +18,8 @@ func newOpts(options []Option) opts {
 	return o
 }
 
-func WithTrace(on bool) Option {
-	return func(o *opts) { o.trace = on }
+func WithTrace(_ bool) Option {
+	return func(o *opts) {}
 }
 
 func WithParams(p Params) Option {

@@ -17,9 +17,10 @@ func collectFindHorizontalResistanceDebug(candles []domain.Candle, highs []Swing
 		return snap
 	}
 
-	tolerance := math.Max(p.VolTolerance, vol*0.8)
-	breakout := p.BreakoutTolerance
-	minSpacing := p.MinResistanceSpacing
+	tolerance := math.Max(p.Horizontal.VolTolerance, vol*0.8)
+	breakout := p.Horizontal.BreakoutTolerance
+	minSpacing := p.Horizontal.MinResistanceSpacing
+	snap.VolTolParam = p.Horizontal.VolTolerance
 	snap.Tolerance = tolerance
 	snap.Breakout = breakout
 	snap.MinSpacing = minSpacing
@@ -137,8 +138,8 @@ func formatFindHorizontalResistanceDebug(s FindHorizontalResistanceDebugSnapshot
 		}
 	}
 
-	fmt.Fprintf(&b, "tolerance = max(0.002, vol*0.8) = max(0.002, %s) = %s\n",
-		atrFmt(s.Vol*0.8), atrFmt(s.Tolerance))
+	fmt.Fprintf(&b, "tolerance = max(%s, vol*0.8) = max(%s, %s) = %s\n",
+		atrFmt(s.VolTolParam), atrFmt(s.VolTolParam), atrFmt(s.Vol*0.8), atrFmt(s.Tolerance))
 	fmt.Fprintf(&b, "breakout threshold on Close: level * (1 + %.5f)\n", s.Breakout)
 	fmt.Fprintf(&b, "min spacing between counted touches (bar index delta): %d\n\n", s.MinSpacing)
 
