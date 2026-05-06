@@ -69,7 +69,7 @@ func DefaultParams() Params {
 		},
 		Support: SupportFitParams{
 			MaxFirstValleyCrash: 0.015,
-			AllowedFlatVolMult:  1.5,
+			AllowedFlatVolMult:  0.5,
 			FloorTolerance:      0.003,
 			MinRSquared:         0.85,
 			MaxValleyDepthMin:   0.015,
