@@ -81,16 +81,19 @@ type FindValleysDebugSnapshot struct {
 }
 
 type CheckTimingDebugSnapshot struct {
-	FirstTouchIdx       int
-	N                   int
-	HighAboveThreshold  float64
-	CrashThreshold      float64
-	FirstTouchMaxRatio  float64
-	MaxFirstTouchIdx    float64
-	PrecedingBars       int
-	PreSlope            float64
-	PrecedingChecked    bool
-	BarChecks           []TimingBarCheckRow
+	FirstTouchIdx      int
+	N                  int
+	HighAboveThreshold float64
+	CrashThreshold     float64
+	FirstTouchMaxRatio float64
+	MaxFirstTouchIdx   float64
+	PrecedingBars      int
+	PreSlope           float64
+	PrecedingChecked   bool
+	BarChecks          []TimingBarCheckRow
+	LastTouchIdx       int
+	MinLastTouchIdx    int
+	LastTouchOK        bool
 }
 
 type TimingBarCheckRow struct {

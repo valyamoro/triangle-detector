@@ -27,6 +27,7 @@ func formatCheckTimingDebug(s CheckTimingDebugSnapshot) string {
 	} else {
 		fmt.Fprintf(&b, "\npreceding trend: skipped (firstTouchIdx < 5)\n")
 	}
+	fmt.Fprintf(&b, "lastTouchIdx=%d minLastTouchIdx=%d ok=%v\n", s.LastTouchIdx, s.MinLastTouchIdx, s.LastTouchOK)
 	return b.String()
 }
 
@@ -174,6 +175,9 @@ func collectCheckTimingDebug(ctx *pipeCtx) CheckTimingDebugSnapshot {
 		}
 		s.PreSlope, _ = linearRegression(prePoints)
 	}
+	s.LastTouchIdx = ctx.resistanceTouchPoints[len(ctx.resistanceTouchPoints)-1].Index
+	s.MinLastTouchIdx = int(float64(n) * p.Horizontal.MinLastTouchRatio)
+	s.LastTouchOK = s.LastTouchIdx >= s.MinLastTouchIdx
 	return s
 }
 

@@ -18,6 +18,7 @@ type HorizontalParams struct {
 	VolTolerance         float64
 	BreakoutTolerance    float64
 	MinResistanceSpacing int
+	MinLastTouchRatio    float64
 }
 
 type TimingParams struct {
@@ -62,6 +63,7 @@ func DefaultParams() Params {
 			VolTolerance:         0.002,
 			BreakoutTolerance:    0.005,
 			MinResistanceSpacing: 5,
+			MinLastTouchRatio:    0.5,
 		},
 		Timing: TimingParams{
 			FirstTouchMaxRatio: 2.0 / 5.0,

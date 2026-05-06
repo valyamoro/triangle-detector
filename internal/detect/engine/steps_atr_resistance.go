@@ -76,7 +76,13 @@ func stepCheckTimingAndHighs(ctx *pipeCtx) {
 		preSlope, _ := linearRegression(prePoints)
 		if preSlope <= 0 {
 			ctx.reject(spec.ReasonPrecedingTrendNotUp)
+			return
 		}
+	}
+
+	lastTouchIdx := ctx.resistanceTouchPoints[len(ctx.resistanceTouchPoints)-1].Index
+	if float64(lastTouchIdx) < float64(len(ctx.candles))*p.Horizontal.MinLastTouchRatio {
+		ctx.reject(spec.ReasonResistanceLastTouchEarly)
 	}
 }
 
