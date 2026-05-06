@@ -109,6 +109,10 @@ func formatCheckGeometryDebug(s CheckGeometryDebugSnapshot) string {
 	fmt.Fprintf(&b, "minPatternHeight=%s minPatternWidth=%d maxApexFactor=%s\n", atrFmt(s.MinPatternHeight), s.MinPatternWidth, atrFmt(s.MaxApexFactor))
 	fmt.Fprintf(&b, "lastResistanceIdx=%d lastValleyIdx=%d pEnd=%d patternWidth=%s\n",
 		s.LastResistanceIdx, s.LastValleyIdx, s.PEnd, atrFmt(s.PatternWidth))
+	if s.MaxResistanceTrailingGap > 0 {
+		fmt.Fprintf(&b, "resistanceGap=%d gapRatio=%s maxGapRatio=%s\n",
+			s.ResistanceGap, atrFmt(s.ResistanceGapRatio), atrFmt(s.MaxResistanceTrailingGap))
+	}
 	if s.StageNote != "" {
 		fmt.Fprintf(&b, "stage: %s\n", s.StageNote)
 	}
@@ -180,4 +184,3 @@ func collectCheckTimingDebug(ctx *pipeCtx) CheckTimingDebugSnapshot {
 	s.LastTouchOK = s.LastTouchIdx >= s.MinLastTouchIdx
 	return s
 }
-

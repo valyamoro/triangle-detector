@@ -97,50 +97,50 @@ type CheckTimingDebugSnapshot struct {
 }
 
 type TimingBarCheckRow struct {
-	Index       int
-	High        float64
-	Low         float64
-	HighOK      bool
-	LowOK       bool
-	FailHigh    bool
-	FailLow     bool
+	Index    int
+	High     float64
+	Low      float64
+	HighOK   bool
+	LowOK    bool
+	FailHigh bool
+	FailLow  bool
 }
 
 type ValidateValleysDebugSnapshot struct {
-	AvgPrice           float64
-	ResistanceLevel    float64
-	FirstVIdx          int
-	MaxCrashRange      float64
-	CrashLimit         float64
-	AllowedFlat        float64
-	FloorTolerance     float64
-	MaxValleyDepth     float64
-	Valleys            []SwingPoint
-	PairChecks         []ValleyPairCheckRow
-	FloorChecks        []ValleyFloorCheckRow
-	DepthChecks        []ValleyDepthCheckRow
+	AvgPrice        float64
+	ResistanceLevel float64
+	FirstVIdx       int
+	MaxCrashRange   float64
+	CrashLimit      float64
+	AllowedFlat     float64
+	FloorTolerance  float64
+	MaxValleyDepth  float64
+	Valleys         []SwingPoint
+	PairChecks      []ValleyPairCheckRow
+	FloorChecks     []ValleyFloorCheckRow
+	DepthChecks     []ValleyDepthCheckRow
 }
 
 type ValleyPairCheckRow struct {
-	I            int
-	PrevVal      float64
-	CurrVal      float64
-	MinAllowed   float64
-	OK           bool
+	I          int
+	PrevVal    float64
+	CurrVal    float64
+	MinAllowed float64
+	OK         bool
 }
 
 type ValleyFloorCheckRow struct {
-	I           int
-	CurrVal     float64
-	FloorMin    float64
-	OK          bool
+	I        int
+	CurrVal  float64
+	FloorMin float64
+	OK       bool
 }
 
 type ValleyDepthCheckRow struct {
-	Index       int
-	Value       float64
-	MinAllowed  float64
-	OK          bool
+	Index      int
+	Value      float64
+	MinAllowed float64
+	OK         bool
 }
 
 type FitSupportDebugSnapshot struct {
@@ -167,45 +167,47 @@ type SupportDeviationRow struct {
 }
 
 type CheckGeometryDebugSnapshot struct {
-	PatternStart      int
-	PatternEnd        int
-	ResistanceLevel   float64
-	SupportSlope      float64
-	SupportIntercept  float64
-	XIntersect        float64
-	LastX             float64
-	CeilingTol        float64
-	Ceiling           float64
-	CeilingEnd        int
-	FloorTol          float64
-	HeightAtStart     float64
-	HeightAtEnd       float64
-	MaxNarrowingRatio float64
-	MinPatternHeight  float64
-	MinPatternWidth   int
-	MaxApexFactor     float64
-	LastResistanceIdx int
-	LastValleyIdx     int
-	PEnd              int
-	PatternWidth      float64
-	CeilingBreakBar   int
-	FloorBreakBar     int
-	SupportCrossBar   int
-	StageNote         string
+	PatternStart             int
+	PatternEnd               int
+	ResistanceLevel          float64
+	SupportSlope             float64
+	SupportIntercept         float64
+	XIntersect               float64
+	LastX                    float64
+	CeilingTol               float64
+	Ceiling                  float64
+	CeilingEnd               int
+	FloorTol                 float64
+	HeightAtStart            float64
+	HeightAtEnd              float64
+	MaxNarrowingRatio        float64
+	MinPatternHeight         float64
+	MinPatternWidth          int
+	MaxApexFactor            float64
+	LastResistanceIdx        int
+	LastValleyIdx            int
+	PEnd                     int
+	PatternWidth             float64
+	CeilingBreakBar          int
+	FloorBreakBar            int
+	SupportCrossBar          int
+	StageNote                string
+	ResistanceGap            int
+	ResistanceGapRatio       float64
+	MaxResistanceTrailingGap float64
 }
 
 type CheckVolumeDebugSnapshot struct {
-	PatternStart   int
-	PEnd           int
-	Width          int
-	MinWidth       int
-	Skipped        bool
-	SkipNote       string
-	PointCount     int
-	AvgVol         float64
-	VolSlope       float64
+	PatternStart    int
+	PEnd            int
+	Width           int
+	MinWidth        int
+	Skipped         bool
+	SkipNote        string
+	PointCount      int
+	AvgVol          float64
+	VolSlope        float64
 	NormalizedSlope float64
-	SlopeMax       float64
-	Points         []SwingPoint
+	SlopeMax        float64
+	Points          []SwingPoint
 }
-

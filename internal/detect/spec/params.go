@@ -38,12 +38,13 @@ type SupportFitParams struct {
 }
 
 type GeometryParams struct {
-	CeilingTolMin     float64
-	FloorTolMin       float64
-	MaxNarrowingRatio float64
-	MinPatternHeight  float64
-	MinPatternWidth   int
-	MaxApexFactor     float64
+	CeilingTolMin              float64
+	FloorTolMin                float64
+	MaxNarrowingRatio          float64
+	MinPatternHeight           float64
+	MinPatternWidth            int
+	MaxApexFactor              float64
+	MaxResistanceTrailingGap   float64
 }
 
 type VolumeDeclParams struct {
@@ -80,12 +81,13 @@ func DefaultParams() Params {
 			MinSlopeVolMult:     0.3,
 		},
 		Geometry: GeometryParams{
-			CeilingTolMin:     0.002,
-			FloorTolMin:       0.0015,
-			MaxNarrowingRatio: 0.7,
-			MinPatternHeight:  0.005,
-			MinPatternWidth:   15,
-			MaxApexFactor:     2.0,
+			CeilingTolMin:            0.002,
+			FloorTolMin:              0.0015,
+			MaxNarrowingRatio:        0.7,
+			MinPatternHeight:         0.005,
+			MinPatternWidth:          15,
+			MaxApexFactor:            2.0,
+			MaxResistanceTrailingGap: 0.35,
 		},
 		VolumeDecl: VolumeDeclParams{
 			VolDeclSlopeMax: 0.01,

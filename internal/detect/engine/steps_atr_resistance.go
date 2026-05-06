@@ -95,4 +95,3 @@ func stepFindValleys(ctx *pipeCtx) {
 		ctx.reject(spec.ReasonFewValleys)
 	}
 }
-

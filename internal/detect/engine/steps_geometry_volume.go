@@ -6,31 +6,34 @@ func geometrySnapshotFromCtx(ctx *pipeCtx, pEnd, ceilingEnd int, note string, cB
 	p := ctx.p
 	g := ctx.dbg.Geometry
 	return CheckGeometryDebugSnapshot{
-		PatternStart:      ctx.patternStart,
-		PatternEnd:        ctx.patternEnd,
-		ResistanceLevel:   ctx.resistanceLevel,
-		SupportSlope:      ctx.supportSlope,
-		SupportIntercept:  ctx.supportIntercept,
-		XIntersect:        ctx.xIntersect,
-		LastX:             ctx.lastX,
-		CeilingTol:        g.CeilingTol,
-		Ceiling:           g.Ceiling,
-		CeilingEnd:        ceilingEnd,
-		FloorTol:          g.FloorTol,
-		HeightAtStart:     g.HeightAtStart,
-		HeightAtEnd:       g.HeightAtEnd,
-		MaxNarrowingRatio: p.Geometry.MaxNarrowingRatio,
-		MinPatternHeight:  p.Geometry.MinPatternHeight,
-		MinPatternWidth:   p.Geometry.MinPatternWidth,
-		MaxApexFactor:     p.Geometry.MaxApexFactor,
-		LastResistanceIdx: g.LastResistanceIdx,
-		LastValleyIdx:     g.LastValleyIdx,
-		PEnd:              pEnd,
-		PatternWidth:      g.PatternWidth,
-		StageNote:         note,
-		CeilingBreakBar:   cBreak,
-		FloorBreakBar:     fBreak,
-		SupportCrossBar:   sCross,
+		PatternStart:             ctx.patternStart,
+		PatternEnd:               ctx.patternEnd,
+		ResistanceLevel:          ctx.resistanceLevel,
+		SupportSlope:             ctx.supportSlope,
+		SupportIntercept:         ctx.supportIntercept,
+		XIntersect:               ctx.xIntersect,
+		LastX:                    ctx.lastX,
+		CeilingTol:               g.CeilingTol,
+		Ceiling:                  g.Ceiling,
+		CeilingEnd:               ceilingEnd,
+		FloorTol:                 g.FloorTol,
+		HeightAtStart:            g.HeightAtStart,
+		HeightAtEnd:              g.HeightAtEnd,
+		MaxNarrowingRatio:        p.Geometry.MaxNarrowingRatio,
+		MinPatternHeight:         p.Geometry.MinPatternHeight,
+		MinPatternWidth:          p.Geometry.MinPatternWidth,
+		MaxApexFactor:            p.Geometry.MaxApexFactor,
+		LastResistanceIdx:        g.LastResistanceIdx,
+		LastValleyIdx:            g.LastValleyIdx,
+		PEnd:                     pEnd,
+		PatternWidth:             g.PatternWidth,
+		StageNote:                note,
+		CeilingBreakBar:          cBreak,
+		FloorBreakBar:            fBreak,
+		SupportCrossBar:          sCross,
+		ResistanceGap:            g.ResistanceGap,
+		ResistanceGapRatio:       g.ResistanceGapRatio,
+		MaxResistanceTrailingGap: p.Geometry.MaxResistanceTrailingGap,
 	}
 }
 
@@ -132,6 +135,19 @@ func stepCheckGeometry(ctx *pipeCtx) {
 	if xIntersect > lastX+patternWidth*p.Geometry.MaxApexFactor {
 		ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, pEnd, ceilingEnd, "apex too far", -1, -1, -1))
 		ctx.reject(spec.ReasonApexTooFar)
+		return
+	}
+
+	resistanceGap := patternEnd - lastResistanceIdx
+	gapRatio := 0.0
+	if patternWidth > 0 {
+		gapRatio = float64(resistanceGap) / patternWidth
+	}
+	ctx.dbg.Geometry.ResistanceGap = resistanceGap
+	ctx.dbg.Geometry.ResistanceGapRatio = gapRatio
+	if p.Geometry.MaxResistanceTrailingGap > 0 && gapRatio > p.Geometry.MaxResistanceTrailingGap {
+		ctx.dbg.Logs.CheckGeometry = formatCheckGeometryDebug(geometrySnapshotFromCtx(ctx, pEnd, ceilingEnd, "resistance gap too long", -1, -1, -1))
+		ctx.reject(spec.ReasonResistanceGapTooLong)
 		return
 	}
 

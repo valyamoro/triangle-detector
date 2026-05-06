@@ -62,6 +62,8 @@ type GeometryDebug struct {
 	LastValleyIdx     int
 	PEnd              int
 	PatternWidth      float64
+	ResistanceGap     int
+	ResistanceGapRatio float64
 }
 
 type DebugInfo struct {

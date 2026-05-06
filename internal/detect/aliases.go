@@ -26,31 +26,32 @@ type RejectReason = spec.RejectReason
 type RejectCounter = spec.RejectCounter
 
 const (
-	ReasonFewSwingHighs          = spec.ReasonFewSwingHighs
-	ReasonResistanceLt3Touches   = spec.ReasonResistanceLt3Touches
-	ReasonHighBeforeFirstTouch   = spec.ReasonHighBeforeFirstTouch
-	ReasonCrashBeforeFirstTouch  = spec.ReasonCrashBeforeFirstTouch
-	ReasonFirstTouchTooLate      = spec.ReasonFirstTouchTooLate
-	ReasonFewValleys             = spec.ReasonFewValleys
-	ReasonValleyNotRising        = spec.ReasonValleyNotRising
-	ReasonNegativeSlope          = spec.ReasonNegativeSlope
-	ReasonValleyTooDeep          = spec.ReasonValleyTooDeep
-	ReasonLowRSquared            = spec.ReasonLowRSquared
-	ReasonValleyOffSupportLine   = spec.ReasonValleyOffSupportLine
-	ReasonNoConvergence          = spec.ReasonNoConvergence
-	ReasonBreaksCeiling          = spec.ReasonBreaksCeiling
-	ReasonBreaksSupportFloor     = spec.ReasonBreaksSupportFloor
-	ReasonSupportAboveResistance = spec.ReasonSupportAboveResistance
-	ReasonNotNarrowing           = spec.ReasonNotNarrowing
-	ReasonTooFlat                = spec.ReasonTooFlat
-	ReasonTooNarrow              = spec.ReasonTooNarrow
-	ReasonApexTooFar             = spec.ReasonApexTooFar
-	ReasonFirstValleyCrash       = spec.ReasonFirstValleyCrash
-	ReasonFirstValleyNotFloor    = spec.ReasonFirstValleyNotFloor
-	ReasonPrecedingTrendNotUp    = spec.ReasonPrecedingTrendNotUp
-	ReasonVolumeNotDeclining     = spec.ReasonVolumeNotDeclining
+	ReasonFewSwingHighs            = spec.ReasonFewSwingHighs
+	ReasonResistanceLt3Touches     = spec.ReasonResistanceLt3Touches
+	ReasonHighBeforeFirstTouch     = spec.ReasonHighBeforeFirstTouch
+	ReasonCrashBeforeFirstTouch    = spec.ReasonCrashBeforeFirstTouch
+	ReasonFirstTouchTooLate        = spec.ReasonFirstTouchTooLate
+	ReasonFewValleys               = spec.ReasonFewValleys
+	ReasonValleyNotRising          = spec.ReasonValleyNotRising
+	ReasonNegativeSlope            = spec.ReasonNegativeSlope
+	ReasonValleyTooDeep            = spec.ReasonValleyTooDeep
+	ReasonLowRSquared              = spec.ReasonLowRSquared
+	ReasonValleyOffSupportLine     = spec.ReasonValleyOffSupportLine
+	ReasonNoConvergence            = spec.ReasonNoConvergence
+	ReasonBreaksCeiling            = spec.ReasonBreaksCeiling
+	ReasonBreaksSupportFloor       = spec.ReasonBreaksSupportFloor
+	ReasonSupportAboveResistance   = spec.ReasonSupportAboveResistance
+	ReasonNotNarrowing             = spec.ReasonNotNarrowing
+	ReasonTooFlat                  = spec.ReasonTooFlat
+	ReasonTooNarrow                = spec.ReasonTooNarrow
+	ReasonApexTooFar               = spec.ReasonApexTooFar
+	ReasonFirstValleyCrash         = spec.ReasonFirstValleyCrash
+	ReasonFirstValleyNotFloor      = spec.ReasonFirstValleyNotFloor
+	ReasonPrecedingTrendNotUp      = spec.ReasonPrecedingTrendNotUp
+	ReasonVolumeNotDeclining       = spec.ReasonVolumeNotDeclining
 	ReasonSupportSlopeTooFlat      = spec.ReasonSupportSlopeTooFlat
 	ReasonResistanceLastTouchEarly = spec.ReasonResistanceLastTouchEarly
+	ReasonResistanceGapTooLong     = spec.ReasonResistanceGapTooLong
 )
 
 func DefaultParams() Params {

@@ -156,4 +156,3 @@ func stepFitSupportLine(ctx *pipeCtx) {
 	}
 	ctx.dbg.Logs.FitSupportLine = formatFitSupportDebug(snap)
 }
-
