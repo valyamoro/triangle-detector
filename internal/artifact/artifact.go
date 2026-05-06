@@ -47,15 +47,15 @@ func NewNames(baseDir, stem string) Names {
 
 func WriteTexts(names Names, result detect.Result, writeFn func(path string, result detect.Result)) {
 	writeFn(names.DebugTxt, result)
-	writeLogTxt(names.CalcATRTxt, result.Debug.Logs.CalcATR)
-	writeLogTxt(names.SwingTxt, result.Debug.Logs.FindSwingHighs)
-	writeLogTxt(names.HorizTxt, result.Debug.Logs.FindHorizontalResistance)
-	writeLogTxt(names.CheckTimingTxt, result.Debug.Logs.CheckTimingAndHighs)
-	writeLogTxt(names.FindValleysTxt, result.Debug.Logs.FindValleys)
-	writeLogTxt(names.ValidateValleysTxt, result.Debug.Logs.ValidateValleys)
-	writeLogTxt(names.FitSupportLineTxt, result.Debug.Logs.FitSupportLine)
-	writeLogTxt(names.CheckGeometryTxt, result.Debug.Logs.CheckGeometry)
-	writeLogTxt(names.CheckVolumeTxt, result.Debug.Logs.CheckVolume)
+	writeStepLog(names.CalcATRTxt, result.Debug.Logs.CalcATR)
+	writeStepLog(names.SwingTxt, result.Debug.Logs.FindSwingHighs)
+	writeStepLog(names.HorizTxt, result.Debug.Logs.FindHorizontalResistance)
+	writeStepLog(names.CheckTimingTxt, result.Debug.Logs.CheckTimingAndHighs)
+	writeStepLog(names.FindValleysTxt, result.Debug.Logs.FindValleys)
+	writeStepLog(names.ValidateValleysTxt, result.Debug.Logs.ValidateValleys)
+	writeStepLog(names.FitSupportLineTxt, result.Debug.Logs.FitSupportLine)
+	writeStepLog(names.CheckGeometryTxt, result.Debug.Logs.CheckGeometry)
+	writeStepLog(names.CheckVolumeTxt, result.Debug.Logs.CheckVolume)
 }
 
 func WriteLogTxt(path, content string) {
@@ -68,5 +68,15 @@ func writeLogTxt(path, content string) {
 	}
 	if err := os.WriteFile(path, []byte(content), 0o644); err != nil {
 		log.Printf("writeLogTxt %s: %v", path, err)
+	}
+}
+
+func writeStepLog(path, content string) {
+	c := content
+	if strings.TrimSpace(c) == "" {
+		c = "(no output: pipeline stopped before this step)\n"
+	}
+	if err := os.WriteFile(path, []byte(c), 0o644); err != nil {
+		log.Printf("writeStepLog %s: %v", path, err)
 	}
 }
