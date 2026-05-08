@@ -17,13 +17,15 @@ RUN apk add --no-cache \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+ && ln -sf /usr/bin/chromium-browser /usr/bin/google-chrome \
+ && mkdir -p /data
 
 COPY --from=builder /out/triangled /app/triangled
 
 ENV CHROME_BIN=/usr/bin/chromium-browser \
     CHROME_PATH=/usr/bin/chromium-browser \
-    DATA_DIR=/data \
+    DATA_DIR=/data/triangled \
     SYMBOLS=BTCUSDT,ETHUSDT
 
 VOLUME ["/data"]

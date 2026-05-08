@@ -18,7 +18,20 @@ type Screenshotter struct {
 }
 
 func NewScreenshotter() (*Screenshotter, error) {
+	chromePath := os.Getenv("CHROME_BIN")
+	if chromePath == "" {
+		chromePath = os.Getenv("CHROME_PATH")
+	}
+	if chromePath == "" {
+		chromePath = "chromium-browser"
+	}
+
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.ExecPath(chromePath),
+		chromedp.Headless,
+		chromedp.NoSandbox,
+		chromedp.DisableGPU,
+		chromedp.Flag("disable-dev-shm-usage", true),
 		chromedp.WindowSize(1400, 700),
 	)
 	allocCtx, allocCancel := chromedp.NewExecAllocator(context.Background(), opts...)

@@ -24,6 +24,14 @@ import (
 	"github.com/gopherchan2006/go-triangle-detector/internal/screenshot"
 )
 
+func resolveDataDir(raw string) string {
+	dataDir := strings.TrimSpace(raw)
+	if dataDir != "" {
+		return dataDir
+	}
+	return filepath.Join("tmp")
+}
+
 func sanitizeReason(reason detect.RejectReason) string {
 	r := strings.ReplaceAll(string(reason), "<", "lt")
 	r = strings.ReplaceAll(r, ">", "gt")
@@ -76,7 +84,7 @@ func writeDebugTxt(txtPath string, result detect.Result) {
 }
 
 func analyzeSymbol(ctx context.Context, sym, interval, startDate, endDate string, dataDir string, ss *screenshot.Screenshotter, rejectLimit int) {
-	chartDir := filepath.Join("tmp", sym+"_chart")
+	chartDir := filepath.Join(dataDir, sym+"_chart")
 	if err := os.MkdirAll(chartDir, 0o755); err != nil {
 		log.Printf("[%s] failed to create chart dir: %v", sym, err)
 		return
@@ -162,7 +170,7 @@ func analyzeSymbol(ctx context.Context, sym, interval, startDate, endDate string
 			fileDate := timestamp.Format("2006-01-02")
 
 			safeReason := sanitizeReason(reason)
-			rejectDir := filepath.Join("tmp", "rejects", safeReason, sym)
+			rejectDir := filepath.Join(dataDir, "rejects", safeReason, sym)
 			if err := os.MkdirAll(rejectDir, 0o755); err != nil {
 				log.Printf("[%s] failed to create reject dir: %v", sym, err)
 				continue
@@ -427,12 +435,15 @@ func main() {
 	rejectLimit := flag.Int("reject-limit", 0, "Max reject charts to save per filter (0 = disabled)")
 	flag.Parse()
 
-	if err := os.RemoveAll("tmp"); err != nil {
-		log.Printf("remove tmp: %v", err)
-	}
-
 	_ = config.LoadEnvFile(".env")
 	appCfg := config.LoadAppConfig()
+	dataDir := resolveDataDir(appCfg.DataDir)
+	if appCfg.DataDir == "" {
+		log.Printf("DATA_DIR is empty, using fallback: %s", dataDir)
+	}
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
+		log.Fatalf("failed to create data dir: %v", err)
+	}
 
 	if *interval == "" {
 		*interval = "15m"
@@ -454,7 +465,7 @@ func main() {
 			Interval:        *interval,
 			Workers:         *workers,
 			WindowSize:      50,
-			OutputDir:       filepath.Join("tmp", "realtime"),
+			OutputDir:       filepath.Join(dataDir, "realtime"),
 			WithScreenshots: needBrowser,
 		}
 		runRealtime(ctx, cfg, ss)
@@ -466,11 +477,6 @@ func main() {
 	}
 	if *endDate == "" {
 		*endDate = "2026-04-18"
-	}
-
-	dataDir := appCfg.DataDir
-	if err := os.MkdirAll(dataDir, 0o755); err != nil {
-		log.Fatalf("failed to create data dir: %v", err)
 	}
 
 	var symbols []string
