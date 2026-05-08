@@ -30,3 +30,4 @@ ENV CHROME_BIN=chromium \
 VOLUME ["/data"]
 
 ENTRYPOINT ["/usr/local/bin/triangled"]
+CMD ["-realtime", "-interval", "15m", "-workers", "20"]
