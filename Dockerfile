@@ -6,7 +6,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /out/triangled ./cmd/triangled
+RUN CGO_ENABLED=0 GOOS=linux go build -o /build/triangled ./cmd/triangled
 
 FROM alpine:3.20
 WORKDIR /app
@@ -18,17 +18,15 @@ RUN apk add --no-cache \
     harfbuzz \
     ca-certificates \
     ttf-freefont \
- && ln -sf /usr/bin/chromium /usr/bin/chromium-browser \
- && ln -sf /usr/bin/chromium /usr/bin/google-chrome \
  && mkdir -p /data
 
-COPY --from=builder /out/triangled /app/triangled
+COPY --from=builder /build/triangled /usr/local/bin/triangled
 
-ENV CHROME_BIN=/usr/bin/chromium \
-    CHROME_PATH=/usr/bin/chromium \
+ENV CHROME_BIN=chromium \
+    CHROME_PATH=chromium \
     DATA_DIR=/data/triangled \
     SYMBOLS=BTCUSDT,ETHUSDT
 
 VOLUME ["/data"]
 
-ENTRYPOINT ["/app/triangled"]
+ENTRYPOINT ["/usr/local/bin/triangled"]
