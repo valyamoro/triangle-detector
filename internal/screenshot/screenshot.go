@@ -2,8 +2,10 @@ package screenshot
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
 
@@ -17,13 +19,33 @@ type Screenshotter struct {
 	browserCancel context.CancelFunc
 }
 
-func NewScreenshotter() (*Screenshotter, error) {
-	chromePath := os.Getenv("CHROME_BIN")
-	if chromePath == "" {
-		chromePath = os.Getenv("CHROME_PATH")
+func resolveChromePath() (string, error) {
+	candidates := []string{
+		os.Getenv("CHROME_BIN"),
+		os.Getenv("CHROME_PATH"),
+		"/usr/bin/chromium",
+		"/usr/bin/chromium-browser",
+		"chromium",
+		"chromium-browser",
+		"google-chrome",
 	}
-	if chromePath == "" {
-		chromePath = "chromium-browser"
+
+	for _, candidate := range candidates {
+		if candidate == "" {
+			continue
+		}
+		if p, err := exec.LookPath(candidate); err == nil {
+			return p, nil
+		}
+	}
+
+	return "", errors.New("chrome/chromium executable not found; set CHROME_BIN")
+}
+
+func NewScreenshotter() (*Screenshotter, error) {
+	chromePath, err := resolveChromePath()
+	if err != nil {
+		return nil, err
 	}
 
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
